@@ -1,0 +1,5 @@
+__*.*
+*.exe
+
+__pycache__
+.idea

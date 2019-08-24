@@ -142,7 +142,7 @@ This doesn't work in many cases and frequently produces something uncompilable. 
 
 ## Performance
 
-As great as you would expect. The processing was O(n²), until I placed an arbitrary limit of 2048 characters on any single token. This brilliant optimization made it possible to process as much as more than one file per second.
+As great as you would expect. The processing was O(n²), until I placed an arbitrary limit of 2048 characters on any single token. This brilliant optimization made it possible to process as much as more than about one file per second.
 
 ## Reporting breakage
 
@@ -158,3 +158,25 @@ If the output is uncompilable or compiles to something different than source des
 ## Internals
 
 "Wow, I just noticed this produces correct output for `x-- -x` and `x- --x`! This must use some professionally written tokenizer, using reference grammar!" No, I just hacked together some rules that seemed right. The rules are regexes or giant walls of conditionals.
+
+## TODO
+
+- [ ] add more innovative naming schemes than `var_{i}`
+- [ ] add new option to arrange source code into arbitrary shapes (that's why the tokenizer already prefers shorter tokens where possible)
+    ```cpp
+    // Arbitrary shape.
+    using       namespace std;tem\
+    plate<      typename T>struct
+    /****/      Rectangle{pair<T,T
+    >start,     stop;Re\
+    ctangle     (T,T,T
+    ,T);};      template
+    <typename T>Rectangle<T>::Rec\
+    tangle(T start_x,T start_y,T \
+    stop_x,T stop_y):start(start_x
+    ```
+- [ ] make code improvements not be reversible with `g++ -E` and autoformatter – that's a hard one:
+  - [ ] detect usercode declarations and rename them completely, leaving no reference to the old name behind
+  - [ ] that's impossible to implement with current approach, so throw away all the code and rewrite everything
+- [x] don't throw away all the code
+- [ ] rewrite readme.md to be sane

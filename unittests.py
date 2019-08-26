@@ -20,6 +20,13 @@ a=a- --a
 #define x <
 >>> check_output("#define x(y) (y)")
 #define x(y)(y)
+
+>>> check_output("word .0")
+word .0
+>>> check_output("word.attribute")
+word.attribute
+>>> check_output("{{}}")
+{{}}
 """
 
 import doctest

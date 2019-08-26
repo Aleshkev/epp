@@ -48,7 +48,7 @@ def tokenize(s: str, raise_errors: bool = True):
         """Tries to eat a token matching the expression, appends it and moves cursor if successful."""
         nonlocal i
         m = e.search(s, i, i + 2048)
-        if not m or m.start(0) != i:
+        if not m or m.start(0) != i or len(m.group(0)) == 0:
             return False
         if token_type is not None:
             tokens.append(Token(m.group(lexeme_group), token_type, s[i - 1] in " \n"))
@@ -75,7 +75,7 @@ def tokenize(s: str, raise_errors: bool = True):
                        custom_finalizer=finalize): continue
 
         # Generic identifiers and numbers.
-        if try_eat(re.compile(r"\.?(\d\.|\w)+"), TokenType.word): continue
+        if try_eat(re.compile(r"(\.\d)?(\d\.\d|\w)*"), TokenType.word): continue
 
         # Operators.
         short_operators = any_of("()[].!~*&/%<>^|?:=,;!@#$%^&*()-+=[]{};:,.<>/?~")
@@ -115,8 +115,8 @@ def serialize(tokens: List[Token]):
     def requires_space(token: Token):
         # This is terrible. Please send help.
         return ((token.type == TokenType.word and token.previous.type != TokenType.operator) or
-                (token.type == TokenType.operator and token.lexeme[0] == token.previous.lexeme[-1] and
-                 len(token.lexeme) >= len(token.previous.lexeme)) or
+                (token.type == TokenType.operator and token.lexeme[0] == token.previous.lexeme[-1] and 
+                 token.lexeme[0] in ("+", "-") and len(token.lexeme) >= len(token.previous.lexeme)) or
                 (token.previous.type == TokenType.directive_begin) or
                 (token.previous.previous is not None and token.previous.previous.type == TokenType.directive_begin and
                  token.containing_directive == "define" and token.had_space_before))
